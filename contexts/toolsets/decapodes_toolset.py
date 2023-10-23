@@ -114,7 +114,7 @@ If you are asked to manipulate, stratify, or visualize the model, use the genera
         # This will be factored out when we switch around to allow using multiple runtimes.
         amr = (
             await self.context.evaluate(
-                f"generate_json_acset({self.var_name})"
+                f"{self.var_name} |> json ∘ generate_json_acset"
             )
         )["return"]
         return json.dumps(amr, indent=2)
@@ -124,7 +124,7 @@ If you are asked to manipulate, stratify, or visualize the model, use the genera
         self, query: str, agent: AgentRef, loop: LoopControllerRef
     ) -> None:
         """
-        Generated Julia code to be run in an interactive Jupyter notebook for the purpose of exploring, modifying and visualizing a Pandas Dataframe.
+        Generated Julia code to be run in an interactive Jupyter notebook for the purpose of exploring and modifying systems of partial differential equations.
 
         Input is a full grammatically correct question about or request for an action to be performed on the loaded model.
 
@@ -170,25 +170,12 @@ No addtional text is needed in the response, just the code block.
         self, server=None, target_stream=None, data=None, parent_header={}
     ):
         try:
-            await self.context.execute(
-                "_decapodes_model = Model(model);\n"
-                "_model_size = len(_mira_model.variables) + len(_mira_model.transitions);\n"
-                "del _mira_model;\n"
+            preview = await self.context.evaluate(self.get_code("model_preview"))
+            format_dict, md_dict = preview["return"]
+            content = {"data": format_dict}
+            self.context.kernel.send_response(
+                "iopub", "model_preview", content, parent_header=parent_header
             )
-            model_size = (await self.context.evaluate("_model_size"))["return"]
-            if model_size < 800:
-                preview = await self.context.evaluate(self.get_code("model_preview"))
-                format_dict, md_dict = preview["return"]
-                content = {"data": format_dict}
-                self.context.kernel.send_response(
-                    "iopub", "model_preview", content, parent_header=parent_header
-                )
-            else:
-                print(
-                    f"Note: Model is too large ({model_size} nodes) for auto-preview.",
-                    file=sys.stderr,
-                    flush=True,
-                )
         except Exception as e:
             raise
 
@@ -200,7 +187,7 @@ No addtional text is needed in the response, just the code block.
 
         new_model: dict = (
             await self.context.evaluate(
-                f"generate_json_acset({self.var_name})"
+                f"{self.var_name} |> json ∘ generate_json_acset"
             )
         )["return"]
 
