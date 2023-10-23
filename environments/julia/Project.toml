@@ -1,7 +1,11 @@
 [deps]
+ACSets = "227ef7b5-1206-438b-ac65-934d6da304b8"
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+Catlab = "134e5e36-593f-5add-ad60-77f754baafbe"
+CombinatorialSpaces = "b1c52339-7909-45ad-8b6a-6e388f7c67f2"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 DataSets = "c9661210-8a83-48f0-b833-72e62abce419"
+Decapodes = "679ab3ea-c928-4fe6-8d59-fd451142d391"
 DisplayAs = "0b91fe84-8a4c-11e9-3e1d-67c38462b6d6"
 Downloads = "f43a241f-c20a-4ad4-852c-f6b1247861c6"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
