@@ -24,6 +24,7 @@ from contexts.subkernels.python import PythonSubkernel
 from contexts.subkernels.julia import JuliaSubkernel
 from contexts.subkernels.rlang import RSubkernel
 from contexts.toolsets import DatasetToolset, MiraModelToolset
+from contexts.toolsets.decapodes_toolset import DecapodesToolset
 
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ MESSAGE_STREAMS = {
 AVAILABLE_TOOLSETS = {
     "dataset": DatasetToolset,
     "mira_model": MiraModelToolset,
+    "decapodes": DecapodesToolset,
 }
 
 

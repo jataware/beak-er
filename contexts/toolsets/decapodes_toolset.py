@@ -34,7 +34,7 @@ class DecapodesToolset(BaseToolset):
             "save_amr_request": (self.save_amr_request, "shell"),
         }
         self.reset()
-    
+
     async def setup(self, config, parent_header):
         item_id = config["id"]
         item_type = config.get("type", "model")
