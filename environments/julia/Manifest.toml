@@ -2,7 +2,7 @@
 
 julia_version = "1.9.3"
 manifest_format = "2.0"
-project_hash = "0dedf2bd4ce5668e835e61483a287200daecdca2"
+project_hash = "6d26bb7ca92e6d4cc1859ec2c6b30bee8fe80cbb"
 
 [[deps.ACSets]]
 deps = ["CompTime", "JSON", "MLStyle", "OrderedCollections", "Pkg", "PrettyTables", "Reexport", "StaticArrays", "StructEquality", "Tables"]
@@ -1019,6 +1019,12 @@ deps = ["Dates", "Mmap", "Parsers", "Unicode"]
 git-tree-sha1 = "31e996f0a15c7b280ba9f76636b3ff9e2ae58c9a"
 uuid = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 version = "0.21.4"
+
+[[deps.JSON3]]
+deps = ["Dates", "Mmap", "Parsers", "PrecompileTools", "StructTypes", "UUIDs"]
+git-tree-sha1 = "95220473901735a0f4df9d1ca5b171b568b2daa3"
+uuid = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
+version = "1.13.2"
 
 [[deps.JpegTurbo]]
 deps = ["CEnum", "FileIO", "ImageCore", "JpegTurbo_jll", "TOML"]
@@ -2239,6 +2245,12 @@ git-tree-sha1 = "192a9f1de3cfef80ab1a4ba7b150bb0e11ceedcf"
 uuid = "6ec83bb0-ed9f-11e9-3b4c-2b04cb4e219c"
 version = "2.1.0"
 
+[[deps.StructTypes]]
+deps = ["Dates", "UUIDs"]
+git-tree-sha1 = "ca4bccb03acf9faaf4137a9abc1881ed1841aa70"
+uuid = "856f2bd8-1eba-4b0a-8007-ebc267875bd4"
+version = "1.10.0"
+
 [[deps.SuiteSparse]]
 deps = ["Libdl", "LinearAlgebra", "Serialization", "SparseArrays"]
 uuid = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
@@ -2253,6 +2265,12 @@ deps = ["DocStringExtensions"]
 git-tree-sha1 = "f8ab052bfcbdb9b48fad2c80c873aa0d0344dfe5"
 uuid = "2efcf032-c050-4f8e-a9bb-153293bab1f5"
 version = "0.2.2"
+
+[[deps.SyntacticModels]]
+deps = ["ACSets", "Catlab", "Decapodes", "JSON", "JSON3", "MLStyle", "Reexport", "StructTypes"]
+git-tree-sha1 = "86476590b3c793bbb9ff59ba398437b8971a2eee"
+uuid = "22bb929c-8bcf-4852-b455-eb3e1675e09c"
+version = "0.1.0"
 
 [[deps.TOML]]
 deps = ["Dates"]
