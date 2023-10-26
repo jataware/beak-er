@@ -114,7 +114,8 @@ If you are asked to manipulate, stratify, or visualize the model, use the genera
         # This will be factored out when we switch around to allow using multiple runtimes.
         amr = (
             await self.context.evaluate(
-                f"{self.var_name} |> json ∘ generate_json_acset"
+                # f"{self.var_name} |> json ∘ generate_json_acset"
+                "nothing"
             )
         )["return"]
         return json.dumps(amr, indent=2)
@@ -169,15 +170,11 @@ No addtional text is needed in the response, just the code block.
     async def send_decapodes_preview_message(
         self, server=None, target_stream=None, data=None, parent_header={}
     ):
-        try:
-            preview = await self.context.evaluate(self.get_code("model_preview"))
-            format_dict, md_dict = preview["return"]
-            content = {"data": format_dict}
-            self.context.kernel.send_response(
-                "iopub", "model_preview", content, parent_header=parent_header
-            )
-        except Exception as e:
-            raise
+        preview = await self.context.evaluate(self.get_code("output_model")) # TODO: Spit out something prettier than the JSON
+        content = {"data": preview["return"]}
+        self.context.kernel.send_response(
+            "iopub", "model_preview", content, parent_header=parent_header
+        )
 
     async def save_amr_request(self, server, target_stream, data):
         message = JupyterMessage.parse(data)
@@ -187,7 +184,8 @@ No addtional text is needed in the response, just the code block.
 
         new_model: dict = (
             await self.context.evaluate(
-                f"{self.var_name} |> json ∘ generate_json_acset"
+                # f"{self.var_name} |> json ∘ generate_json_acset"
+                "nothing"
             )
         )["return"]
 
