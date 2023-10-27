@@ -171,9 +171,16 @@ No addtional text is needed in the response, just the code block.
         self, server=None, target_stream=None, data=None, parent_header={}
     ):
         preview = await self.context.evaluate(self.get_code("output_model")) # TODO: Spit out something prettier than the JSON
-        content = {"data": preview["return"]}
+        json_str = preview["return"]["json"]
+        image = preview["return"]["image"]
+        content = {
+            "data": {
+                "application/json": json_str,
+                "image/svg": image,
+            }
+        }
         self.context.kernel.send_response(
-            "iopub", "model_preview", content, parent_header=parent_header
+            "iopub", "decapodes_preview", content, parent_header=parent_header
         )
 
     async def save_amr_request(self, server, target_stream, data):
@@ -182,12 +189,7 @@ No addtional text is needed in the response, just the code block.
 
         new_name = content.get("name")
 
-        new_model: dict = (
-            await self.context.evaluate(
-                # f"{self.var_name} |> json ∘ generate_json_acset"
-                "nothing"
-            )
-        )["return"]
+        new_model = await self.context.evaluate(self.get_code("output_model"))["return"]
 
         original_name = new_model.get("name", "None")
         original_model_id = self.model_id
