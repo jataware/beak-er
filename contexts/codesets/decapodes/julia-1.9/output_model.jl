@@ -1,3 +1,4 @@
+# TODO: Rename file `decapode_to_info.jl`
 using Decapodes, Catlab, Catlab.Graphics
 import JSON3, DisplayAs
 
