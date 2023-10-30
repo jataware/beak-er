@@ -239,6 +239,33 @@ async function createApp(manager: ServiceManager.IManager): void {
 
   };
 
+  const sendCustomMessage = (channel: string, msgType: string, content: Object) => {
+    const session = sessionContext.session;
+    const kernel = session?.kernel;
+    if (kernel) {
+      const timestamp = new Date().toISOString();
+      const message: JupyterMessage = createMessage({
+        session: session?.name || '',
+        channel: channel,
+        content: content,
+        msgType: msgType,
+        msgId: `${kernel.id}-${msgType}-timestamp`
+      });
+      // const colored_text = `LLM Query: <span style="color: green; font-weight: bold">${query}</span>`
+      // notebook.model.cells.nbmodel.addCell({id: `${message.header.msg_id}-text-${Date.now()}`, cell_type: 'markdown', source: colored_text});
+      console.log("Sending custom message", message);
+      if (channel === "shell") {
+        kernel.sendShellMessage(message);
+      }
+      // else if (channel)
+      else {
+        // TODO: Determine if we actually have to do something different here
+        kernel.sendShellMessage(message);
+      }
+    }
+
+  };
+
   const llmWidget = new Widget();
   const llmContainer = document.createElement('div');
   const llmNode = document.createElement('input');
@@ -278,7 +305,6 @@ async function createApp(manager: ServiceManager.IManager): void {
     option.setAttribute("value", context);
     option.setAttribute("label", context);
     contextSelect.appendChild(option);
-    console.log(languages, typeof languages);
     languages.forEach((lang) => {languageSet.add(lang)});
   }
   // for (const lang of ["python3", "julia"]) {
@@ -305,6 +331,50 @@ async function createApp(manager: ServiceManager.IManager): void {
   contextNode.appendChild(contextButton);
   contextWidget.node.appendChild(contextNode);
 
+  const messageWidget = new Widget();
+  const messageNode = document.createElement('div');
+  const messageHeader = document.createElement('h2');
+  const messageTypeInput = document.createElement('input');
+  const messageChannelSelect = document.createElement('select');
+  const messagePayloadInput = document.createElement('textarea');
+  const messageButton = document.createElement('button');
+
+  messageNode.appendChild(messageHeader);
+  messageNode.appendChild(messageTypeInput);
+  messageNode.appendChild(messageChannelSelect);
+  messageNode.appendChild(messagePayloadInput);
+  messageNode.appendChild(messageButton);
+  messageWidget.node.appendChild(messageNode);
+
+  messageButton.textContent = "Submit";
+  messageButton.onclick = (evt) => {
+    console.log(evt);
+    let channel = messageChannelSelect.value;
+    let msgType = messageTypeInput.value;
+    let contentString = messagePayloadInput.value;
+    let content;
+    try {
+      content = JSON.parse(contentString);
+    }
+    catch(err) {
+      alert("Error: message content must be able to parse to JSON");
+      return;
+    }
+    sendCustomMessage(channel, msgType, content);
+  };
+
+  messageHeader.textContent = "Custom Message:";
+  messageTypeInput.placeholder = "Message type name";
+
+  messageChannelSelect.innerHTML = `
+    <option value="shell">shell</option>
+    <option value="iopub">iopub</option>
+    <option value="stdin">stdin</option>
+    <option value="control">control</option>
+    <option value="hb">hb</option>
+  `;
+  messageChannelSelect.onchange = (evt) => {console.log(evt);}
+
   const dataPreviewWidget = new Widget();
   const dataPreviewHeader = document.createElement('h2');
   const dataPreview = document.createElement('div');
@@ -320,6 +390,7 @@ async function createApp(manager: ServiceManager.IManager): void {
   leftPanel.node.style.overflowY = "auto";
   leftPanel.addWidget(llmWidget);
   leftPanel.addWidget(contextWidget);
+  leftPanel.addWidget(messageWidget);
   leftPanel.addWidget(dataPreviewWidget);
 
   const mainPanel = new SplitPanel();
