@@ -33,24 +33,21 @@ class DecapodesCreationToolset(BaseToolset):
     def __init__(self, context, *args, **kwargs):
         super().__init__(context=context, *args, **kwargs)
         self.intercepts = {
-            # "save_amr_request": (self.save_amr_request, "shell"),
+            "save_amr_request": (self.save_amr_request, "shell"),
             "compile_expr_request": (self.compile_expr, "shell"),
         }
         self.reset()
 
     async def setup(self, config, parent_header):
-        item_id = config["id"]
-        item_type = config.get("type", "model")
-        print(f"Processing {item_type} AMR {item_id} as a Decapode model")
         command = "\n".join(
             [
                 self.get_code("setup"),
                 "_expr = parse_decapode(quote end)",
-                "nothing"",
             ]
         )
         print(f"Running command:\n-------\n{command}\n---------")
         await self.context.execute(command)
+        print("Decapodes creation environment set up")
 
 
     async def post_execute(self, message):
@@ -157,6 +154,7 @@ No addtional text is needed in the response, just the code block.
         self.context.kernel.send_response(
             "iopub", "decapodes_preview", content, parent_header=parent_header
         )
+
     async def compile_expr(self, server, target_stream, data):
         message = JupyterMessage.parse(data)
         content = message.content
@@ -174,3 +172,7 @@ No addtional text is needed in the response, just the code block.
         self.context.kernel.send_response(
             "iopub", "compile_expr_response", {"successs": True}, parent_header=message.header
         )
+        await self.send_decapodes_preview_message(parent_header=message.header)
+
+    async def save_amr_request(self, server, target_stream, data):
+        pass
