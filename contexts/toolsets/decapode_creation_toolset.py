@@ -46,7 +46,7 @@ class DecapodesCreationToolset(BaseToolset):
             [
                 self.get_code("setup"),
                 "_expr = parse_decapode(quote end)",
-                "using DisplayAs; DisplayAs.unlimited(Dict())",
+                "nothing"",
             ]
         )
         print(f"Running command:\n-------\n{command}\n---------")
@@ -166,6 +166,7 @@ No addtional text is needed in the response, just the code block.
         command = "\n".join(
             [
                 self.get_code("construct_expr", {"declaration": declaration}),
+                "nothing"
             ]
         )
         await self.context.execute(command)
