@@ -164,13 +164,10 @@ async function createApp(manager: ServiceManager.IManager): void {
     }
     else if (msg.msg_type === "decapodes_preview") {
       const content = msg.content;
-      const html = `
-<select onchange="console.log(this.value)"><option value="application/json">json</option><option value="image/svg">image</option></select>
-<div class="display">${JSON.stringify(content.data["application/json"])}</div>
-      `
-      notebook.model.cells.nbmodel.addCell({id: `${msg.id}-text`, cell_type: 'markdown', source: html});
-
-
+      dataPreview.innerHTML = `
+        <div>${content.data["image/svg"]}</div>
+        <div>${JSON.stringify(content.data["application/json"], null, 2)}</div>
+      `;
     }
     else {
       console.log(msg);
