@@ -7,9 +7,8 @@ function expr_to_svg(expr)
     String(take!(io))
 end
 
-
 _response = Dict(
-    "json" => _expr,
-    "image" => expr_to_svg(_expr) 
+    "application/json" => _expr,
+    "image/svg" => expr_to_svg(_expr) 
 )
 _response |> DisplayAs.unlimited ∘ JSON3.write

@@ -146,8 +146,8 @@ No addtional text is needed in the response, just the code block.
         self, server=None, target_stream=None, data=None, parent_header={}
     ):
         preview = await self.context.evaluate(self.get_code("expr_to_info"))
-        json_str = preview["return"]["json"]
-        image = preview["return"]["image"]
+        json_str = preview["return"]["application/json"]
+        image = preview["return"]["image/svg"]
         content = {
             "data": {
                 "application/json": json_str,
@@ -166,11 +166,10 @@ No addtional text is needed in the response, just the code block.
         command = "\n".join(
             [
                 self.get_code("construct_expr", {"declaration": declaration}),
-                self.get_code("expr_to_info"),
             ]
         )
-        info = await self.context.execute(command)
+        await self.context.execute(command)
 
         self.context.kernel.send_response(
-            "iopub", "compile_expr_response", info, parent_header=message.header
+            "iopub", "compile_expr_response", {"successs": True}, parent_header=message.header
         )
