@@ -220,6 +220,9 @@ class LLMKernel(KernelProxyManager):
 
             data = message.content["data"].get("text/plain", None)
             message_context["return"] = data
+            filter_list.remove(
+                InterceptionFilter(iopub_socket, "execute_result", collect_result)
+            )
 
         async def collect_stream(server, target_stream, data):
             message = JupyterMessage.parse(data)
@@ -251,9 +254,6 @@ class LLMKernel(KernelProxyManager):
                 )
             filter_list.remove(
                 InterceptionFilter(iopub_socket, "stream", collect_stream)
-            )
-            filter_list.remove(
-                InterceptionFilter(iopub_socket, "execute_result", collect_result)
             )
             filter_list.remove(
                 InterceptionFilter(iopub_socket, "execute_input", silence_message)
@@ -289,6 +289,8 @@ class LLMKernel(KernelProxyManager):
         await asyncio.sleep(0.1)
         while not message_context["done"]:
             await asyncio.sleep(0.2)
+        # Wait for any straggling messages
+        await asyncio.sleep(0.2)
         self.internal_executions.remove(message_id)
         return message_context
 
