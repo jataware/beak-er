@@ -40,7 +40,10 @@ class ContextHandler(ExtensionHandlerMixin, JupyterHandler):
             "decapodes": {
                 "languages": ["julia-1.9"],
             },
-            
+            "decapodes_creation": {
+                "languages": ["julia-1.9"],
+            },
+
         }
         return self.write(context_data)
 
