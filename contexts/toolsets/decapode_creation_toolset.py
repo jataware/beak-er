@@ -25,10 +25,7 @@ class DecapodesCreationToolset(BaseToolset):
     toolset_name = "decapodes_creation"
     codeset_name = "decapodes"
 
-    model_id: Optional[str]
-    model_json: Optional[str]
-    model_dict: Optional[dict[str, Any]]
-    var_name: Optional[str] = "model"
+    decapode_declaration: str = " "
 
     def __init__(self, context, *args, **kwargs):
         super().__init__(context=context, *args, **kwargs)
@@ -57,16 +54,41 @@ class DecapodesCreationToolset(BaseToolset):
         pass
 
     async def auto_context(self):
-        return f"""You are an scientific modeler whose goal is to use the Decapodes modeling library to manipulate Decapodes models in Julia.
+        return """You are an scientific modeler whose goal is to construct a DecaExpr for Decapodes.jl modeling library.
 
-You are working on a Multiphysics model named: {self.amr.get('name')}
+Explanation of Decapodes.jl from the docs
+> Discrete Exterior Calculus Applied to Partial and Ordinary Differential Equations (Decapodes) is a diagrammatic language 
+> used to express systems of ordinary and partial differential equations. The Decapode provides a visual framework for 
+> understanding the coupling between variables within a PDE or ODE system, and a combinatorial data structure for working 
+> with them. Below, we provide a high-level overview of how Decapodes can be generated and interpreted.
 
-The description of the model is:
-{self.amr.get('description')}
+However, we will just be instantiating a model with SyntacticModels.jl
+Explanation of SyntacticModels from the docs.
+> SyntacticModels.jl is a Julia library for representing models as syntactic expressions.
+> The driving example for this library is the need to interoperate models between programming languages in the DARPA 
+> ASKEM Program. The AlgebraicJulia ecosystem includes some great tools for specifying modeling languages, but they are 
+> deeply connected to the Julia language. This package aims to provide simple tools for specifying domain specific 
+> programming languages that can be used to exchange the specification of scientific models between host languages.
+> We heavily use the MLStyle.jl package for defining Algebraic Data Types so you should familiarize yourself with those 
+> concepts before reading on in this documentation.
+>
+> The easiest way to write down a DecaExpr is in our DSL and calling the parser.
+```
+_expr = Decapodes.parse_decapode(quote
+  X::Form0{Point}
+  V::Form0{Point}
 
-The model has the following structure:
+  k::Constant{Point}
+
+  ∂ₜ(X) == V
+  ∂ₜ(V) == -1*k*(X)
+end
+)
+```
+
+Currently, the model has the following structure:
 --- START ---
-{await self.model_structure()}
+""" + await self.model_structure() + """
 --- END ---
 
 Please answer any user queries to the best of your ability, but do not guess if you are not sure of an answer.
@@ -87,21 +109,36 @@ If you are asked to manipulate, stratify, or visualize the model, use the genera
         # This will be factored out when we switch around to allow using multiple runtimes.
         amr = (
             await self.context.evaluate(
-                f"using DisplayAs, JSON3; _expr |> DisplayAs.unlimited ∘ JSON3.write"
+                f"_expr |> string"
             )
         )["return"]
         return json.dumps(amr, indent=2)
+
+
+    @tool()
+    async def generate_response(
+        self, query: str, agent: AgentRef, loop: LoopControllerRef
+    ) -> None:
+        """
+        DO NOT USE THIS TOOL. IT IS USELESS.
+
+        
+        Args:
+            query (str): A fully grammatically correct queistion about the current model.
+        """
+        return 
+    
 
     @tool()
     async def generate_code(
         self, query: str, agent: AgentRef, loop: LoopControllerRef
     ) -> None:
         """
-        Generated Julia code to be run in an interactive Jupyter notebook for the purpose of exploring and modifying systems of partial differential equations.
+        Generated Julia code to be run in an interactive Jupyter notebook for the purpose of exploring and modifying systems the DecaExpr.
 
         Input is a full grammatically correct question about or request for an action to be performed on the loaded model.
 
-        Assume that the model is already loaded and has the variable named `model`.
+        Assume that the expression is already loaded and has the variable named `_expr`.
         Information about the dataframe can be loaded with the `model_structure` tool.
 
         Args:
@@ -114,13 +151,10 @@ You are a programmer writing code to help with scientific data analysis and mani
 
 Please write code that satisfies the user's request below.
 
-You have access to a variable name `model` that is a Petrinet model with the following structure:
+You have access to a variable name `_expr` that is a Decapodes SyntacticModel model with the following structure:
 {await self.model_structure()}
 
-If you are asked to modify or update the model, modify the model in place, keeping the updated variable to still be named `model`.
-You have access to the AlgebraicJulia libraries: Decapodes, Catlab, ACSets, CombinatorialSpaces.
-
-You also have access to the library HTTP.jl.
+Your generated will be in the form `_expr = parse_decapode(quote ...modified object.. end)`
 
 Please generate the code as if you were programming inside a Jupyter Notebook and the code is to be executed inside a cell.
 You MUST wrap the code with a line containing three backticks (```) before and after the generated code.
