@@ -8,7 +8,7 @@ function expr_to_svg(expr)
 end
 
 _response = Dict(
-    "application/json" => _expr,
-    "image/svg" => expr_to_svg(_expr)
+    "application/json" => {{ var_name|default("_expr") }},
+    "image/svg" => expr_to_svg({{ var_name|default("_expr") }})
 )
 _response |> DisplayAs.unlimited ∘ JSON3.write

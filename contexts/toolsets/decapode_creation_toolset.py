@@ -25,7 +25,8 @@ class DecapodesCreationToolset(BaseToolset):
     toolset_name = "decapodes_creation"
     codeset_name = "decapodes"
 
-    decapode_declaration: str = " "
+    decapodes_expression_dsl: Optional[str] = None
+    var_name: Optional[str] = "_expr"
 
     def __init__(self, context, *args, **kwargs):
         super().__init__(context=context, *args, **kwargs)
@@ -39,7 +40,7 @@ class DecapodesCreationToolset(BaseToolset):
         command = "\n".join(
             [
                 self.get_code("setup"),
-                "_expr = parse_decapode(quote end)",
+                f"{self.var_name} = parse_decapode(quote end)",
             ]
         )
         print(f"Running command:\n-------\n{command}\n---------")
@@ -57,19 +58,19 @@ class DecapodesCreationToolset(BaseToolset):
         return """You are an scientific modeler whose goal is to construct a DecaExpr for Decapodes.jl modeling library.
 
 Explanation of Decapodes.jl from the docs
-> Discrete Exterior Calculus Applied to Partial and Ordinary Differential Equations (Decapodes) is a diagrammatic language 
-> used to express systems of ordinary and partial differential equations. The Decapode provides a visual framework for 
-> understanding the coupling between variables within a PDE or ODE system, and a combinatorial data structure for working 
+> Discrete Exterior Calculus Applied to Partial and Ordinary Differential Equations (Decapodes) is a diagrammatic language
+> used to express systems of ordinary and partial differential equations. The Decapode provides a visual framework for
+> understanding the coupling between variables within a PDE or ODE system, and a combinatorial data structure for working
 > with them. Below, we provide a high-level overview of how Decapodes can be generated and interpreted.
 
 However, we will just be instantiating a model with SyntacticModels.jl
 Explanation of SyntacticModels from the docs.
 > SyntacticModels.jl is a Julia library for representing models as syntactic expressions.
-> The driving example for this library is the need to interoperate models between programming languages in the DARPA 
-> ASKEM Program. The AlgebraicJulia ecosystem includes some great tools for specifying modeling languages, but they are 
-> deeply connected to the Julia language. This package aims to provide simple tools for specifying domain specific 
+> The driving example for this library is the need to interoperate models between programming languages in the DARPA
+> ASKEM Program. The AlgebraicJulia ecosystem includes some great tools for specifying modeling languages, but they are
+> deeply connected to the Julia language. This package aims to provide simple tools for specifying domain specific
 > programming languages that can be used to exchange the specification of scientific models between host languages.
-> We heavily use the MLStyle.jl package for defining Algebraic Data Types so you should familiarize yourself with those 
+> We heavily use the MLStyle.jl package for defining Algebraic Data Types so you should familiarize yourself with those
 > concepts before reading on in this documentation.
 >
 > The easiest way to write down a DecaExpr is in our DSL and calling the parser.
@@ -85,6 +86,12 @@ _expr = Decapodes.parse_decapode(quote
 end
 )
 ```
+
+
+The definition of the current model is:
+--- START ---
+{self.decapodes_expression_dsl}
+--- END ---
 
 Currently, the model has the following structure:
 --- START ---
@@ -122,12 +129,12 @@ If you are asked to manipulate, stratify, or visualize the model, use the genera
         """
         DO NOT USE THIS TOOL. IT IS USELESS.
 
-        
+
         Args:
             query (str): A fully grammatically correct queistion about the current model.
         """
-        return 
-    
+        return
+
 
     @tool()
     async def generate_code(
@@ -182,7 +189,7 @@ No addtional text is needed in the response, just the code block.
         content = result["return"]
         if content is None:
             raise RuntimeError("Info not returned for preview")
-        
+
         self.context.kernel.send_response(
             "iopub", "decapodes_preview", content, parent_header=parent_header
         )
@@ -192,10 +199,11 @@ No addtional text is needed in the response, just the code block.
         content = message.content
 
         declaration = content.get("declaration")
+        self.decapodes_expression_dsl = declaration
 
         command = "\n".join(
             [
-                self.get_code("construct_expr", {"declaration": declaration}),
+                self.get_code("construct_expr", {"declaration": declaration, "var_name": self.var_name}),
                 "nothing"
             ]
         )
@@ -212,8 +220,8 @@ No addtional text is needed in the response, just the code block.
 
         header = content["header"]
         header["_type"] = "Header"
-        
-        preview = await self.context.evaluate(self.get_code("expr_to_info"))
+
+        preview = await self.context.evaluate(self.get_code("expr_to_info", {"var_name": self.var_name}))
         model = preview["return"]["application/json"]
 
         amr = {
