@@ -1,0 +1,24 @@
+{
+  "targetDefaults": {
+    "build": {
+      "dependsOn": ["^build"]
+    },
+    "build:prod": {
+      "dependsOn": ["^build:prod"]
+    },
+    "dev-install": {
+      "dependsOn": ["^dev-install"]
+    },
+    "dev-uninstall": {
+      "dependsOn": ["clean:labextension"]
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "test"]
+      }
+    }
+  }
+}
