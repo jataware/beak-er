@@ -14,11 +14,8 @@ COPY --chown=1000:1000 environments/julia /home/jupyter/.julia/environments/v1.9
 USER jupyter
 WORKDIR /home/jupyter
 
-RUN julia -e 'ENV["JUPYTER_DATA_DIR"] = "/usr/local/share/jupyter"; using Pkg; Pkg.add("IJulia")'
+RUN julia -e 'ENV["JUPYTER_DATA_DIR"] = "/usr/local/share/jupyter"; using Pkg; Pkg.instantiate()'
 # TODO: Remove these lines and add them back into the Project.toml when branch is merged
-RUN julia -e 'using Pkg; Pkg.add(url="https://github.com/fivegrant/Decapodes.jl", rev="jpf/DecaExpr")'
-RUN julia -e 'using Pkg; Pkg.add("SyntacticModels")'
-RUN julia -e 'using Pkg; Pkg.add("Graphviz_jll")'
 
 USER root
 
