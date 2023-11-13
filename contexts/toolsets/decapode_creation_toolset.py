@@ -26,7 +26,7 @@ class DecapodesCreationToolset(BaseToolset):
     codeset_name = "decapodes"
 
     decapodes_expression_dsl: Optional[str] = None
-    var_name: Optional[str] = "_expr"
+    var_names: list[str] = []
 
     def __init__(self, context, *args, **kwargs):
         super().__init__(context=context, *args, **kwargs)
@@ -38,10 +38,27 @@ class DecapodesCreationToolset(BaseToolset):
         self.reset()
 
     async def setup(self, config, parent_header):
+        if len(config) == 0:
+            var_names = [ "dexpr" ]
+            load_commands = [
+                "dexpr = @decapode begin end"
+            ]
+        else:
+            var_names = list(config.keys())
+
+            def fetch_model(model_id):
+                meta_url = f"{os.environ['DATA_SERVICE_URL']}/models/{self.model_id}"
+                return requests.get(meta_url).json() # TODO: Exceptions not caught
+                
+            load_commands = [
+                f"""{var_name} = @decapode begin end"""
+                for var_name, items in config.items()
+            ]
+            
         command = "\n".join(
             [
                 self.get_code("setup"),
-                f"{self.var_name} = parse_decapode(quote end)",
+                *load_commands
             ]
         )
         print(f"Running command:\n-------\n{command}\n---------")
