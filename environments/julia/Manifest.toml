@@ -2,7 +2,7 @@
 
 julia_version = "1.9.3"
 manifest_format = "2.0"
-project_hash = "eea703a258fcbc3db3be22318cd2db2688275840"
+project_hash = "d110f6a4af2270869b85b51cf13e98c9eb862d2a"
 
 [[deps.ACSets]]
 deps = ["AlgebraicInterfaces", "Base64", "CompTime", "DataStructures", "JSON", "JSON3", "MLStyle", "OrderedCollections", "Permutations", "Pkg", "PrettyTables", "Random", "Reexport", "SHA", "StaticArrays", "StructEquality", "Tables"]
@@ -2098,6 +2098,14 @@ version = "5.10.0"
 
     [deps.Symbolics.weakdeps]
     SymPy = "24249f21-da20-56a4-8eb1-6a02cf4ae2e6"
+
+[[deps.SyntacticModels]]
+deps = ["ACSets", "Catlab", "Decapodes", "JSON", "JSON3", "MLStyle", "Reexport", "StructTypes"]
+git-tree-sha1 = "db3863b22c9dae1906dbe663fd2952e122e5a67b"
+repo-rev = "main"
+repo-url = "https://github.com/AlgebraicJulia/SyntacticModels.jl"
+uuid = "22bb929c-8bcf-4852-b455-eb3e1675e09c"
+version = "0.1.0"
 
 [[deps.TOML]]
 deps = ["Dates"]
