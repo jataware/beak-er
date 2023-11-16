@@ -42,18 +42,19 @@ class DecapodesCreationToolset(BaseToolset):
         var_names = list(config.keys())
 
         def fetch_model(model_id):
-            meta_url = f"{os.environ['DATA_SERVICE_URL']}/models/{self.model_id}"
-            return requests.get(meta_url).json() # TODO: Exceptions not caught
+            meta_url = f"{os.environ['DATA_SERVICE_URL']}/models/{model_id}"
+            model = json.dumps(requests.get(meta_url).json()["model"]) # TODO: Exceptions not caught
+            return model
             
         load_commands = [
-            f"""{var_name} = parse_json_acset(SummationDecapode{Symbol, Symbol, Symbol}, JSON3.parse({fetch_model(decapode_id)}).model)"""
+            f"{var_name} = parse_json_acset(SummationDecapode" + "{Symbol, Symbol, Symbol}," + f'"""{fetch_model(decapode_id)}""")'
             for var_name, decapode_id in config.items()
         ]
             
         command = "\n".join(
             [
                 self.get_code("setup"),
-                "decapode = @decapode begin end"
+                "decapode = @decapode begin end",
                 *load_commands
             ]
         )
@@ -200,7 +201,7 @@ No addtional text is needed in the response, just the code block.
         if parent_header is None:
             parent_header = {}
         preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
-        content = result["return"]
+        content = preview["return"]
         if content is None:
             raise RuntimeError("Info not returned for preview")
 
