@@ -27,6 +27,7 @@ class DecapodesCreationToolset(BaseToolset):
 
     decapodes_expression_dsl: Optional[str] = None
     var_names: list[str] = []
+    target: str = "decapode"
 
     def __init__(self, context, *args, **kwargs):
         super().__init__(context=context, *args, **kwargs)
@@ -38,26 +39,21 @@ class DecapodesCreationToolset(BaseToolset):
         self.reset()
 
     async def setup(self, config, parent_header):
-        if len(config) == 0:
-            var_names = [ "dexpr" ]
-            load_commands = [
-                "dexpr = @decapode begin end"
-            ]
-        else:
-            var_names = list(config.keys())
+        var_names = list(config.keys())
 
-            def fetch_model(model_id):
-                meta_url = f"{os.environ['DATA_SERVICE_URL']}/models/{self.model_id}"
-                return requests.get(meta_url).json() # TODO: Exceptions not caught
-                
-            load_commands = [
-                f"""{var_name} = @decapode begin end"""
-                for var_name, items in config.items()
-            ]
+        def fetch_model(model_id):
+            meta_url = f"{os.environ['DATA_SERVICE_URL']}/models/{self.model_id}"
+            return requests.get(meta_url).json() # TODO: Exceptions not caught
+            
+        load_commands = [
+            f"""{var_name} = parse_json_acset(SummationDecapode{Symbol, Symbol, Symbol}, JSON3.parse({fetch_model(decapode_id)}).model)"""
+            for var_name, decapode_id in config.items()
+        ]
             
         command = "\n".join(
             [
                 self.get_code("setup"),
+                "decapode = @decapode begin end"
                 *load_commands
             ]
         )
@@ -203,7 +199,7 @@ No addtional text is needed in the response, just the code block.
     ):
         if parent_header is None:
             parent_header = {}
-        result = await self.context.evaluate(self.get_code("expr_to_info"))
+        preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
         content = result["return"]
         if content is None:
             raise RuntimeError("Info not returned for preview")
@@ -249,7 +245,7 @@ No addtional text is needed in the response, just the code block.
         if id_value:
             header['id'] = id_value
 
-        preview = await self.context.evaluate(self.get_code("expr_to_info", {"var_name": self.var_name}))
+        preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
         model = preview["return"]["application/json"]
 
         amr = {
@@ -270,7 +266,7 @@ No addtional text is needed in the response, just the code block.
         header = content["header"]
         header["_type"] = "Header"
 
-        preview = await self.context.evaluate(self.get_code("expr_to_info", {"var_name": self.var_name}))
+        preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
         model = preview["return"]["application/json"]
 
         amr = {
