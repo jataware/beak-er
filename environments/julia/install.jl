@@ -4,19 +4,25 @@ INCLUDED_SYSIMAGES_PACKAGES = [
     "ACSets",
     "AlgebraicRewriting",
     "CSV",
+    "CairoMakie",
     "Catlab",
     "CombinatorialSpaces",
+    "ComponentArrays",
     "DataFrames",
     "DataStructures",
     "Decapodes",
     "DifferentialEquations",
     "DisplayAs",
+    "FileIO",
     "GATlab",
     "GeometryBasics",
     "HTTP",
     "IJulia",
+    "Interpolations",
     "JLD2",
     "JSON3",
+    "LinearAlgebra",
+    "MLStyle",
     "ModelingToolkit",
     "MultiScaleArrays",
     "OrdinaryDiffEq",
@@ -24,6 +30,7 @@ INCLUDED_SYSIMAGES_PACKAGES = [
     "Plots",
     "Pluto",
     "SciMLBase",
+    "SparseArrays",
     "SymbolicUtils",
     "Symbolics",
     "SyntacticModels",
@@ -37,7 +44,7 @@ end
 import Pkg
 Pkg.activate(".")
 
-import PackageCompiler 
+import PackageCompiler
 
 target = if !(length(ARGS) == 0) lowercase(ARGS[1]) else "local" end
 
@@ -55,8 +62,8 @@ env_dir = if target == "local"
         end
         @warn "Overwriting ASKEM environment...."
     end
-    cp("Project.toml", env_dir * "Project.toml"; force=true) 
-    cp("Manifest.toml", env_dir * "Manifest.toml"; force=true) 
+    cp("Project.toml", env_dir * "Project.toml"; force=true)
+    cp("Manifest.toml", env_dir * "Manifest.toml"; force=true)
     Pkg.activate(env_dir)
     env_dir
 end
@@ -71,7 +78,7 @@ if target == "local"
         julia # enter the Julia Repl
         julia> ] activate @askem
         ```
-    
+
         If you wish to start using the sysimage (optimized/faster) mode:
         ```
         julia --project="@askem" --startup=no --color yes -J$(env_dir)ASKEM-Sysimage.so

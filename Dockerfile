@@ -13,7 +13,7 @@ ENV JULIA_PROJECT=/home/jupyter/.julia/environments/v1.9
 
 COPY --from=JULIA_BASE_IMAGE /usr/local/julia /usr/local/julia
 COPY --from=JULIA_BASE_IMAGE /ASKEM-Sysimage.so /usr/local/julia/lib/ASKEM-Sysimage.so
-RUN chmod -R 777 /usr/local/julia/logs
+RUN chmod -R 777 /usr/local/julia
 RUN ln -sf /usr/local/julia/bin/julia /usr/local/bin/julia
 
 COPY --chown=1000:1000 environments/julia /home/jupyter/.julia/environments/v1.9
