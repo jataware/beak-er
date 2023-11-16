@@ -1,0 +1,1 @@
+@jupyter/ydoc @jupyterlab/application @jupyterlab/apputils @jupyterlab/cells @jupyterlab/codemirror @jupyterlab/completer @jupyterlab/coreutils @jupyterlab/rendermime @jupyterlab/services @jupyterlab/theme-light-extension @jupyterlab/translation @jupyterlab/ui-components @lumino/commands @lumino/coreutils @lumino/widgets 
