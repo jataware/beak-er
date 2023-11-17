@@ -218,7 +218,7 @@ No addtional text is needed in the response, just the code block.
 
         command = "\n".join(
             [
-                self.get_code("construct_expr", {"declaration": declaration, "var_name": self.var_name}),
+                self.get_code("construct_expr", {"declaration": declaration, "target": self.target}),
                 "nothing"
             ]
         )
