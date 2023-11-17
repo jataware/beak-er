@@ -12,4 +12,11 @@ _response = Dict(
     "application/json" => generate_json_acset({{ target }}),
     "image/svg" => expr_to_svg({{ target }})
 )
-_response |> DisplayAs.unlimited ∘ JSON3.write
+
+path = "/tmp/decapode.json"
+
+open(path, "w") do f
+  JSON3.write(f, _response)
+end
+
+Dict("path" => path) |> DisplayAs.unlimited ∘ JSON3.write
