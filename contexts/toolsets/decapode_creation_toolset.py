@@ -203,9 +203,7 @@ No addtional text is needed in the response, just the code block.
         if parent_header is None:
             parent_header = {}
         preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
-        filepath = preview["return"]["path"]
-        with open(filepath, "r") as file:
-            content = json.load(file)
+        content = preview["return"]
         if content is None:
             raise RuntimeError("Info not returned for preview")
 
@@ -251,11 +249,7 @@ No addtional text is needed in the response, just the code block.
             header['id'] = id_value
 
         preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
-        filepath = preview["return"]["path"]
-
-        with open(filepath, "r") as file:
-            content = json.load(file)
-        model = content["application/json"]
+        model = preview["return"]["application/json"]
 
         amr = {
             "header": header,
@@ -276,11 +270,7 @@ No addtional text is needed in the response, just the code block.
         header["_type"] = "Header"
 
         preview = await self.context.evaluate(self.get_code("expr_to_info", {"target": self.target}))
-        filepath = preview["return"]["path"]
-
-        with open(filepath, "r") as file:
-            content = json.load(file)
-        model = content["application/json"]
+        model = preview["return"]["application/json"]
 
         amr = {
             "header": header,

@@ -2,10 +2,14 @@ using SyntacticModels, Decapodes, Catlab
 import JSON3, DisplayAs
 
 function expr_to_svg(model)
-    io = IOBuffer()
-    # Catlab.Graphics.Graphviz.run_graphviz(io, to_graphviz(Decapodes.SummationDecapode(model)), format="svg")
-    Catlab.Graphics.Graphviz.run_graphviz(io, to_graphviz(model), format="svg")
-    String(take!(io))
+    _path = "/tmp/decapode.json"
+    open(_path, "w") do f
+        io = IOBuffer()
+        Catlab.Graphics.Graphviz.run_graphviz(io, to_graphviz(model), format="svg")
+    end
+    open(_path, "r") do f
+        return String(take!(f))
+    end
 end
 
 _response = Dict(
@@ -13,10 +17,6 @@ _response = Dict(
     "image/svg" => expr_to_svg({{ target }})
 )
 
-path = "/tmp/decapode.json"
 
-open(path, "w") do f
-  JSON3.write(f, _response)
-end
 
-Dict("path" => path) |> DisplayAs.unlimited ∘ JSON3.write
+_response |> DisplayAs.unlimited ∘ JSON3.write
