@@ -26,7 +26,6 @@ class DecapodesCreationToolset(BaseToolset):
     codeset_name = "decapodes"
 
     decapodes_expression_dsl: Optional[str] = None
-    var_names: list[str] = []
     target: str = "decapode"
 
     def __init__(self, context, *args, **kwargs):
@@ -43,11 +42,14 @@ class DecapodesCreationToolset(BaseToolset):
 
         def fetch_model(model_id):
             meta_url = f"{os.environ['DATA_SERVICE_URL']}/models/{model_id}"
-            model = json.dumps(requests.get(meta_url).json()["model"]) # TODO: Exceptions not caught
+            response = requests.get(meta_url)            
+            if response.status_code >= 300:
+                raise Exception(f"Failed to retrieve model {model_id} from server returning {response.status_code}")
+            model = json.dumps(response.json()["model"])
             return model
             
         load_commands = [
-            f"{var_name} = parse_json_acset(SummationDecapode" + "{Symbol, Symbol, Symbol}," + f'"""{fetch_model(decapode_id)}""")'
+            '%s = parse_json_acset(SummationDecapode{Symbol, Symbol, Symbol},"""%s""")' % (var_name, fetch_model(decapode_id))
             for var_name, decapode_id in config.items()
         ]
             
