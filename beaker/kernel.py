@@ -27,7 +27,6 @@ from contexts.subkernels.python import PythonSubkernel
 from contexts.subkernels.julia import JuliaSubkernel
 from contexts.subkernels.rlang import RSubkernel
 from contexts.toolsets import DatasetToolset, MiraModelToolset
-from contexts.toolsets.decapodes_toolset import DecapodesToolset
 from contexts.toolsets.decapode_creation_toolset import DecapodesCreationToolset
 
 
@@ -49,7 +48,6 @@ MESSAGE_STREAMS = {
 AVAILABLE_TOOLSETS = {
     "dataset": DatasetToolset,
     "mira_model": MiraModelToolset,
-    "decapodes": DecapodesToolset,
     "decapodes_creation": DecapodesCreationToolset,
 }
 

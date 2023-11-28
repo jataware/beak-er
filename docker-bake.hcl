@@ -33,7 +33,7 @@ function "check_suffix" {
 # ----------------------------------------------------------------------------------------------------------------------
 
 group "prod" {
-  targets = ["beaker-kernel"]
+  targets = ["beaker-kernel", "askem-julia-base"]
 }
 
 group "default" {
@@ -49,7 +49,7 @@ target "_platforms" {
 target "askem-julia-base" {
     inherits = ["_platforms"]
 	context = "environments/julia/"
-	tags = buildtag("askem-julia-base", "", "")
+	tags = tag("askem-julia-base", "", "")
 	dockerfile = "Dockerfile"
 }
 
