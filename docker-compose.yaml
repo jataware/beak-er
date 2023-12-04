@@ -3,12 +3,6 @@
 
 version: '3'
 services:
-  julia-base-image:
-    image: askem-julia-base:build
-    build:
-      context: environments/julia
-    command: ["/bin/true"]
-
   jupyter:
     build:
       dockerfile: Dockerfile

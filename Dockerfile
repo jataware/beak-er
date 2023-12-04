@@ -1,5 +1,4 @@
-ARG JULIA_IMAGE=askem-julia-base
-FROM ${JULIA_IMAGE} AS JULIA_BASE_IMAGE
+FROM ghcr.io/darpa-askem/askem-julia:1.0.0 AS JULIA_BASE_IMAGE
 
 
 FROM python:3.10
@@ -9,14 +8,17 @@ RUN mkdir -p /usr/local/share/jupyter/kernels && chmod -R 777 /usr/local/share/j
 
 ENV JULIA_PATH=/usr/local/julia
 ENV JULIA_DEPOT_PATH=/usr/local/julia
-ENV JULIA_PROJECT=/home/jupyter/.julia/environments/v1.9
+ENV JULIA_PROJECT=/home/jupyter/.julia/environments/askem
 
+RUN mkdir -p /home/jupyter/.julia/environments/askem
 COPY --from=JULIA_BASE_IMAGE /usr/local/julia /usr/local/julia
-COPY --from=JULIA_BASE_IMAGE /ASKEM-Sysimage.so /usr/local/julia/lib/ASKEM-Sysimage.so
+COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /Project.toml /home/jupyter/.julia/environments/askem
+COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /Manifest.toml /home/jupyter/.julia/environments/askem
+COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /ASKEM-Sysimage.so /home/jupyter/.julia/environments/askem
 RUN chmod -R 777 /usr/local/julia/logs
+RUN chown -R 1000:1000 /home/jupyter
+RUN chown -R 1000:1000 /usr/local/julia
 RUN ln -sf /usr/local/julia/bin/julia /usr/local/bin/julia
-
-COPY --chown=1000:1000 environments/julia /home/jupyter/.julia/environments/v1.9
 
 WORKDIR /home/jupyter
 
@@ -55,10 +57,13 @@ RUN chown 1000:1000 /jupyter
 COPY --chown=1000:1000 . /jupyter
 
 # Switch to non-root user. It is crucial for security reasons to not run jupyter as root user!
+RUN chmod -R 777 /tmp
+
 USER jupyter
 
 # Install Julia kernel
-RUN /usr/local/julia/bin/julia -J /usr/local/julia/lib/ASKEM-Sysimage.so -e 'using IJulia; IJulia.installkernel("julia"; julia=`/usr/local/julia/bin/julia -J /usr/local/julia/lib/ASKEM-Sysimage.so --threads=4`)'
+RUN /usr/local/julia/bin/julia -e 'using IJulia; IJulia.installkernel("julia"; julia=`/usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so --threads=4`)'
+#RUN /usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so -e 'using IJulia; IJulia.installkernel("julia"; julia=`/usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so --threads=4`)'
 
 # Service
 CMD ["python", "service/main.py", "--ip", "0.0.0.0"]
