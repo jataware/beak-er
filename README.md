@@ -69,7 +69,7 @@ This will start the Jupyter service and launch a specialized notebook interface 
 
 ## Julia Subkernel Packages
 
-The Julia Subkernel is managed by [`askem-julia`](https://github.com/DARPA-ASKEM/askem-julia). To make a new package
+The Julia subkernel is managed by [`askem-julia`](https://github.com/DARPA-ASKEM/askem-julia). To make a new package
 available to Beaker, it must be added to `askem-julia`'s `Project.toml`.
 
  
