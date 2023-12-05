@@ -10,11 +10,8 @@ ENV JULIA_PATH=/usr/local/julia
 ENV JULIA_DEPOT_PATH=/usr/local/julia
 ENV JULIA_PROJECT=/home/jupyter/.julia/environments/askem
 
-RUN mkdir -p /home/jupyter/.julia/environments/askem
 COPY --from=JULIA_BASE_IMAGE /usr/local/julia /usr/local/julia
-COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /Project.toml /home/jupyter/.julia/environments/askem
-COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /Manifest.toml /home/jupyter/.julia/environments/askem
-COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /ASKEM-Sysimage.so /home/jupyter/.julia/environments/askem
+COPY --chown=1000:1000 --from=JULIA_BASE_IMAGE /ASKEM-Sysimage.so /Project.toml /Manifest.toml /home/jupyter/.julia/environments/askem/
 RUN chmod -R 777 /usr/local/julia/logs
 RUN chown -R 1000:1000 /home/jupyter
 RUN chown -R 1000:1000 /usr/local/julia
