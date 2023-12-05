@@ -7,6 +7,7 @@ services:
     image: askem-julia-base:build
     build:
       context: environments/julia
+      dockerfile: docker/Dockerfile
     command: ["/bin/true"]
 
   jupyter:
