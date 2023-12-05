@@ -21,8 +21,6 @@ services:
     volumes:
       - ./beaker_kernel:/usr/local/share/jupyter/kernels/beaker_kernel
       - .:/jupyter
-    depends_on:
-      - julia-base-image
     command:  ["python", "service/dev.py", "--ip", "0.0.0.0", "-y"]
 
   data-service:
