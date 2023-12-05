@@ -57,13 +57,10 @@ RUN chown 1000:1000 /jupyter
 COPY --chown=1000:1000 . /jupyter
 
 # Switch to non-root user. It is crucial for security reasons to not run jupyter as root user!
-RUN chmod -R 777 /tmp
-
 USER jupyter
 
 # Install Julia kernel
 RUN /usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so -e 'using IJulia; IJulia.installkernel("julia"; julia=`/usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so --threads=4`)'
-#RUN /usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so -e 'using IJulia; IJulia.installkernel("julia"; julia=`/usr/local/julia/bin/julia -J /home/jupyter/.julia/environments/askem/ASKEM-Sysimage.so --threads=4`)'
 
 # Service
 CMD ["python", "service/main.py", "--ip", "0.0.0.0"]
