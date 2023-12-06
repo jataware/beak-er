@@ -3,12 +3,13 @@ import HTTP, JSON3, DisplayAs
 _DATA_SERVICE_URL = "{{ dataservice_url }}" 
 _DATASET_NAME = "{{ name }}"
 _DATASET_DESCRIPTION = "{{ description }}"
-_FILENAMES = split({{ filenames }}, ",")
+_FILENAMES = split("{{ filenames }}", ",")
+
 
 _dataset = Dict(
     "name" => _DATASET_NAME,
     "description" => _DATASET_DESCRIPTION,
-    "filenames" => _FILENAMES
+    "file_names" => _FILENAMES
 )
 
 _create_req = HTTP.post("$_DATA_SERVICE_URL/datasets", body=JSON3.write(_dataset))

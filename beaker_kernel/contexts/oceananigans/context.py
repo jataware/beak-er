@@ -38,7 +38,7 @@ class OceananigansContext(BaseContext):
 
 
     async def post_execute(self, message):
-        await self.send_oceananigans_preview_message(parent_header=message.parent_header)
+        pass
 
     def reset(self):
         pass
@@ -68,5 +68,4 @@ If you are asked to write code, please use the generate_code tool.
         self.beaker_kernel.send_response(
             "iopub", "save_data_response", result["return"], parent_header=message.header
         )
-        await self.send_oceananigans_preview_message(parent_header=message.header)
 
