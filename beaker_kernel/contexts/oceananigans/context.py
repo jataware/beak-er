@@ -26,7 +26,7 @@ class OceananigansContext(BaseContext):
     def __init__(self, beaker_kernel: "LLMKernel", subkernel: "BaseSubkernel", config: Dict[str, Any]) -> None:
         self.target = "oceananigan"
         self.intercepts = {
-            "save_data_request": (self.save_data_request, "shell"),
+            "save_data_request": (self.save_data, "shell"),
         }
         self.reset()
         super().__init__(beaker_kernel, subkernel, self.agent_cls, config)
