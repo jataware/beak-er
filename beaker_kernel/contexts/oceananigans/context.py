@@ -25,7 +25,9 @@ class OceananigansContext(BaseContext):
 
     def __init__(self, beaker_kernel: "LLMKernel", subkernel: "BaseSubkernel", config: Dict[str, Any]) -> None:
         self.target = "oceananigan"
-        self.intercepts = {}
+        self.intercepts = {
+            "save_data_request": (self.save_data_request, "shell"),
+        }
         self.reset()
         super().__init__(beaker_kernel, subkernel, self.agent_cls, config)
 
@@ -48,25 +50,10 @@ Please answer any user queries to the best of your ability, but do not guess if 
 If you are asked to write code, please use the generate_code tool.
 """
 
-    async def send_oceananigans_preview_message(
-        self, server=None, target_stream=None, data=None, parent_header=None
-    ):
-        if parent_header is None:
-            parent_header = {}
-        preview = await self.evaluate(self.get_code("expr_to_info", {"target": self.target}))
-        content = preview["return"]
-        if content is None:
-            raise RuntimeError("Info not returned for preview")
-
-        self.beaker_kernel.send_response(
-            "iopub", "oceananigans_preview", content, parent_header=parent_header
-        )
-
     async def save_data(self, server, target_stream, data):
         message = JupyterMessage.parse(data)
         content = message.content
 
-        os.environ["DATA_SERVICE_URL"]
         result = await self.evaluate(
             self.get_code("save_data", 
                 {

@@ -15,6 +15,7 @@ from tornado import ioloop
 from .contexts.dataset.context import DatasetContext
 from .contexts.decapodes.context import DecapodesContext
 from .contexts.mira_model.context import MiraModelContext
+from .contexts.oceananigans.context import OceananigansContext
 from .contexts.pypackage.context import PyPackageContext
 from .lib.context import BaseContext, collect_contexts
 from .lib.jupyter_kernel_proxy import (KERNEL_SOCKETS, KERNEL_SOCKETS_NAMES,
@@ -48,6 +49,7 @@ AVAILABLE_CONTEXTS = {
     DatasetContext.slug: DatasetContext,
     DecapodesContext.slug: DecapodesContext,
     MiraModelContext.slug: MiraModelContext,
+    OceananigansContext.slug: OceananigansContext,
     PyPackageContext.slug: PyPackageContext,
 }
 
