@@ -44,11 +44,24 @@ class OceananigansContext(BaseContext):
         pass
 
     async def auto_context(self):
-        return """You are an scientific modeler whose goal is to help the user
+        return f"""You are a scientific modeler whose goal is to help the user with Julia and Oceananigans.jl
 
+Here are the currently active Oceananigans-related variables in state:
+```
+{await self.get_available_vars()}
+```
 Please answer any user queries to the best of your ability, but do not guess if you are not sure of an answer.
 If you are asked to write code, please use the generate_code tool.
 """
+
+    async def get_available_vars(self, parent_header={}):
+        code = self.get_code("var_info")
+        var_info_response = await self.beaker_kernel.evaluate(
+            code,
+            parent_header=parent_header,
+        )
+        return  var_info_response.get('return')
+
 
     async def save_data(self, server, target_stream, data):
         message = JupyterMessage.parse(data)

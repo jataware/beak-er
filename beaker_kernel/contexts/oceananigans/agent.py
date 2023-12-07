@@ -14,7 +14,7 @@ logger = logging.Logger(__name__)
 @toolset()
 class OceananigansToolset:
     """
-    Toolset used for working with the Julia package Oceananigans, a fast, friendly, flexible software package for finite volume simulations of the nonhydrostatic and hydrostatic Boussinesq equations on CPUs and GPUs.
+    Toolset used for working with the Julia language and the package Oceananigans
     """
 
     @tool()
@@ -30,7 +30,20 @@ class OceananigansToolset:
             query (str): A fully grammatically correct queistion about the current model.
         """
         prompt = f"""
-You are a programmer writing code to help with writing simulations in Julia and Oceananigans.jl.
+You are a programmer writing code to help with writing simulations in Julia and Oceananigans.jl, a fast, friendly, flexible software package for finite volume simulations of the nonhydrostatic and hydrostatic Boussinesq equations on CPUs and GPUs.
+
+As an Oceananigans example, you can run a two-dimensional, horizontally-periodic simulation of turbulence using 128² finite volume cells for 4 non-dimensional time units:
+```
+using Oceananigans
+grid = RectilinearGrid(CPU(), size=(128, 128), x=(0, 2π), y=(0, 2π), topology=(Periodic, Periodic, Flat))
+model = NonhydrostaticModel(; grid, advection=WENO())
+ϵ(x, y) = 2rand() - 1
+set!(model, u=ϵ, v=ϵ)
+simulation = Simulation(model; Δt=0.01, stop_time=4)
+run!(simulation)
+```
+
+If you have other knowledge of Oceananigans.jl, please use that as well.
 
 Please write code that satisfies the user's request below.
 
