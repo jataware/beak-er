@@ -22,7 +22,7 @@ class OceananigansToolset:
         self, query: str, agent: AgentRef, loop: LoopControllerRef
     ) -> None:
         """
-        Generated Julia code to be run in an interactive Jupyter notebook for the purpose of creating simulations in Oceananigans.
+        Generated Julia code to be run in an interactive Jupyter notebook for the purpose of creating models, visualizations, and simulations in Oceananigans.
 
         Input is a full grammatically correct question about or request for an action to be performed with the Julia language or Oceananigans.
 
@@ -44,6 +44,15 @@ run!(simulation)
 ```
 
 If you have other knowledge of Oceananigans.jl, please use that as well.
+
+When doing visualization tasks, please use `WGLMakie`.
+
+Note that `using Oceananigans, WGLMakie` has already been run so do not include it in your output.
+        
+Here are the currently active Oceananigans-related variables in state, please don't redefine these since they are in state:
+```
+{await agent.context.get_available_vars()}
+```
 
 Please write code that satisfies the user's request below.
 

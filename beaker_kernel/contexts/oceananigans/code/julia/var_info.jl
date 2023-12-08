@@ -1,5 +1,5 @@
 using Oceananigans
-_result = Dict()
+_result = Any[]
 _var_syms = names(Main)
 
 _oceananigans_types = [
@@ -14,10 +14,10 @@ _oceananigans_types = [
 for _var_sym in _var_syms
     _var = eval(_var_sym)
     if any(_type -> isa(_var, _type), _oceananigans_types)
-        _result["$(_var_sym)"] = Dict(
-            "type" => typeof(_var),
+        push!(_result, Dict(
+            "var_name" => _var_sym,
             "value" => string(_var),
-        )
+        ))
     end
 end
 

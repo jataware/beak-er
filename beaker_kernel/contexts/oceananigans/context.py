@@ -51,7 +51,8 @@ Here are the currently active Oceananigans-related variables in state:
 {await self.get_available_vars()}
 ```
 Please answer any user queries to the best of your ability, but do not guess if you are not sure of an answer.
-If you are asked to write code, please use the generate_code tool.
+If you are asked to write code, please use the generate_code tool. Please use existing variables if you can and try
+not to redefine existing variables or redo a task the user has already done (unless it needs correcting).
 """
 
     async def get_available_vars(self, parent_header={}):

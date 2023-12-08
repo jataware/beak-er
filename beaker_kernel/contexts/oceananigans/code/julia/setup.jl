@@ -1,1 +1,1 @@
-using Oceananigans
+using Oceananigans, WGLMakie
