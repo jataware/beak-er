@@ -21,6 +21,7 @@ WORKDIR /home/jupyter
 RUN apt update && \
     apt install -y r-base r-cran-irkernel \
         graphviz libgraphviz-dev && \
+        libevent-core-2.1-7 libevent-pthreads-2.1-7 && \
     apt clean -y && \
     apt autoclean -y
 
