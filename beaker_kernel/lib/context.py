@@ -60,7 +60,9 @@ class BaseContext:
                 template = self.jinja_env.get_template(template_file)
                 self.templates[template_name] = template
 
-    async def setup(self, parent_header=None):
+    async def setup(self, config=None, parent_header=None):
+        if config:
+            self.config = config
         if callable(getattr(self.agent, 'setup', None)):
             await self.agent.setup(self.config, parent_header=parent_header)
 
