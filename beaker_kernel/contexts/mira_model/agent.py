@@ -4,7 +4,7 @@ import re
 
 import requests
 from archytas.react import Undefined
-from archytas.tool_utils import AgentRef, LoopControllerRef, tool, toolset
+from archytas.tool_utils import AgentRef, LoopControllerRef, tool
 
 from beaker_kernel.lib.agent import BaseAgent
 from beaker_kernel.lib.context import BaseContext
@@ -13,7 +13,6 @@ from beaker_kernel.lib.jupyter_kernel_proxy import JupyterMessage
 logging.disable(logging.WARNING)  # Disable warnings
 logger = logging.Logger(__name__)
 
-@toolset()
 class MiraModelToolset:
     @tool()
     async def generate_code(

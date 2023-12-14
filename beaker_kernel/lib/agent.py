@@ -68,7 +68,7 @@ class BaseAgent(ReActAgent):
         #         tools.append(generate_code)
 
         super().__init__(
-            model="gpt-4",
+            model="gpt-4-1106-preview",
             # api_key=api_key,  # TODO: get this from configuration
             tools=tools,
             verbose=True,

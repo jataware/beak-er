@@ -32,10 +32,13 @@ class BaseContext:
     def __init__(self, beaker_kernel: "LLMKernel", subkernel: "BaseSubkernel", agent_cls: "BaseAgent", config: Dict[str, Any]) -> None:
         self.beaker_kernel = beaker_kernel
         self.subkernel = subkernel
+        logger.error("BBBBB About to intialize agent")
         self.agent = agent_cls(
             context=self,
             tools=[],
         )
+        logger.error("BBBBB Intialize agent complete")
+        logger.error(f"BBBBB {getattr(self.agent, 'tools', 'no tools?')}")
         self.config = config
 
         # Add intercepts, by inspecting the instance and extracting matching methods

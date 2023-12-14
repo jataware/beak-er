@@ -2,7 +2,7 @@ import json
 import logging
 import re
 
-from archytas.tool_utils import AgentRef, LoopControllerRef, tool, toolset
+from archytas.tool_utils import AgentRef, LoopControllerRef, tool
 
 from beaker_kernel.lib.agent import BaseAgent
 from beaker_kernel.lib.context import BaseContext
@@ -11,7 +11,6 @@ logging.disable(logging.WARNING)  # Disable warnings
 logger = logging.Logger(__name__)
 
 
-@toolset()
 class DecapodesToolset:
     """
     Toolset used for working with the Julia package Decacpodes, a framework for doing descrete exterior calculus based modeling.

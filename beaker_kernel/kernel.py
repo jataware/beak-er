@@ -306,8 +306,11 @@ class LLMKernel(KernelProxyManager):
             return False
 
         # Create and setup context
+        logger.error("AAAAAA About to intialize context")
         self.context = context_cls(beaker_kernel=self, subkernel=self.subkernel, config=context_info)
+        logger.error("AAAAAA Finished intialize context")
         await self.context.setup(config=context_info, parent_header=parent_header)
+        logger.error("AAAAAA Finished context setup")
 
     async def post_execute(self, queue, message_id, data):
         message = JupyterMessage.parse(data)
