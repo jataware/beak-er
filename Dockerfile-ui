@@ -1,0 +1,21 @@
+# Use the official Node.js 20 image as a parent image
+FROM node:20
+
+# Set the working directory inside the container
+WORKDIR /ui
+
+# Copy your project files into the container
+COPY ./beaker-vue /ui
+COPY ./beaker-ts /beaker-ts
+
+# Install Vue CLI globally
+RUN npm install -g @vue/cli
+
+# Install any dependencies (assuming you have a package.json)
+RUN npm install
+
+# Expose the port your app runs on
+EXPOSE 8080
+
+# Command to run your app
+CMD ["npm", "run", "serve"]
