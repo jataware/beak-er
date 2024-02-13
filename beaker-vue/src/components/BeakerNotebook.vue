@@ -20,9 +20,11 @@
                 </template>
 
                 <template #center>
-                    <h4 class="logo">
-                        Beaker
-                    </h4>
+                    <div class="logo">
+                        <h4>
+                            Beaker <span class="longer-title">Development Interface</span>
+                        </h4>
+                    </div>
                 </template>
 
                 <template #end>
@@ -142,7 +144,7 @@
                                 <Card class="debug-card">
                                     <template #title>Custom Message</template>
                                     <template #content>
-                                        <BeakerCustomMessage 
+                                        <BeakerCustomMessage
                                             :theme="selectedTheme"
                                             :session="session"
                                             :expanded="true"
@@ -152,12 +154,11 @@
                                 <Card class="debug-card">
                                     <template #title>State</template>
                                     <template #content>
-                                            
-                                        <vue-json-pretty 
-                                          :data="debugData()"
-                                          :deep="3"
-                                          showLength
-                                          showIcon
+                                        <vue-json-pretty
+                                            :data="debugData()"
+                                            :deep="3"
+                                            showLength
+                                            showIcon
                                         />
                                         <br />
                                         <Button label="Copy" />
@@ -177,6 +178,7 @@
 
         </main>
 
+        <!-- TODO may use HTML comments to hide footer -->
         <footer>
             <LoggingDrawer />
          </footer>
@@ -336,14 +338,11 @@ const addCell = () => {
 
 const runCell = (cell?: number | IBeakerCell) => {
     if (cell === undefined) {
-        console.log(2);
         cell = selectedCell.value;
     }
     else {
-        console.log(1);
         cell = _getCell(cell);
     }
-    console.log(cell);
     if (cell !== undefined) {
         cell.execute(props.session);
     }
@@ -446,12 +445,6 @@ footer {
     flex-direction: column;
 }
 
-.beaker-nb-toolbar {
-    vertical-align: middle;
-    height: 5rem;
-    padding: 1em;
-}
-
 .ide-cells {
     display: flex;
     flex-direction: column;
@@ -468,6 +461,7 @@ footer {
 .beaker-cell {
     border-bottom: 2px solid var(--surface-b);
     background-color: var(--surface-c);
+    border-right: 5px solid transparent;
 }
 
 .beaker-cell.selected {
@@ -498,12 +492,6 @@ footer {
     height: 100%;
 }
 
-.logo {
-    font-size: 1.5rem;
-    margin: 0;
-    padding: 0;
-    width: 15rem;
-}
 
 .cell-container {
     position: absolute;
@@ -574,6 +562,31 @@ footer {
 .toolbar {
     width: 100%;
     padding: 0.5rem 1rem;
+
+    &.p-toolbar {
+        flex-wrap: nowrap;
+    }
+    .p-toolbar-group-end {
+        margin-left: -0.5rem;
+    }
+
+    .logo {
+        font-size: 1.5rem;
+        padding: 0 0.5rem;
+        h4 {
+            margin: 0;
+            padding: 0;
+            font-weight: 300;
+            color: var(--gray-500);
+
+            @media(max-width: 885px) {
+                .longer-title {
+                    display: none;
+                }
+            }
+        }
+    }
+   
 }
 
 </style>

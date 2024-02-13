@@ -17,7 +17,7 @@ const settings = {
     wsUrl: "ws://localhost:8080",
     token: "89f73481102c46c0bc13b2998f9a4fce",
 };
-//
+
 const rawSession = new BeakerSession(
   {
     settings: settings,
@@ -47,8 +47,8 @@ rawSession.sessionReady.then(() => {
           }, 1000);
         } else if (msg.header.msg_type === "debug_event") {
             debug_logs.push(msg.content);
-        } 
-        
+        }
+
         // else if (msg.header.msg_type === 'context_info_response') {
         //   console.log('context_info_response', msg.content);
         // } else {
