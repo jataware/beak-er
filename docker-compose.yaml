@@ -18,6 +18,7 @@ services:
     volumes:
       - ./beaker_kernel:/usr/local/share/jupyter/kernels/beaker_kernel
       - .:/jupyter
+      - ./data:/jupyter/data
     command: ["python", "-m", "beaker_kernel.server.dev", "watch"]
   ui:
     build:
